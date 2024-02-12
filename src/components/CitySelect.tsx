@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { City } from "../types";
-import { GetCity } from "../utils";
+import { GetCity, GetCityByCountry } from "../utils";
 import Dropdown from "./Dropdown";
 type PageProps = {
   containerClassName?: string;
@@ -9,7 +9,7 @@ type PageProps = {
   onTextChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   defaultValue?: City;
   countryid: number;
-  stateid: number;
+  stateid?: number;
   placeHolder?: string;
 };
 
@@ -26,9 +26,15 @@ const CitySelect = ({
   const [cities, setCities] = useState<City[]>([]);
   useEffect(() => {
     if (countryid) {
-      GetCity(countryid, stateid).then((data) => {
-        setCities(data);
-      });
+      if(stateid){
+        GetCity(countryid, stateid).then((data) => {
+          setCities(data);
+        });
+      }else{
+        GetCityByCountry(countryid).then((data) => {
+          setCities(data);
+        });
+      }
     }
   }, [countryid, stateid]);
   return (

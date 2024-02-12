@@ -43,7 +43,26 @@ export const GetCity = async (
   if (countries) {
     const states = countries && countries.states ? countries.states : [];
     const city = states.find((e) => e.id === stateid);
+    console.log("cities s", city && city.cities);
     return city && city.cities ? city.cities : [];
+  } else {
+    return [];
+  }
+};
+
+export const GetCityByCountry = async (
+  countryid: number,
+): Promise<Array<City> | []> => {
+  const cities = await fetch(
+    "https://venkatmcajj.github.io/react-country-state-city/data/citiesminified.json"
+  ).then((res) => res.json());
+  const record = cities as Array<CountryStateCity>;
+  const countries = record.find((e: CountryStateCity) => e.id === countryid);
+  if (countries) {
+    const states = countries && countries.states ? countries.states : [];
+    const cities = states.map((e) => e.cities).flat();
+    console.log("cities", cities);
+    return cities ? cities : [];
   } else {
     return [];
   }
